@@ -216,118 +216,80 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Testimonials Auto-Scroll (mobile only) ──
   const testimonialsGrid = document.querySelector('.testimonials-grid');
-  if (testimonialsGrid) {
-    let animId = null;
-    let isPaused = false;
-    const speed = 1.2;
+  let marqueeState = {};
 
-    function initMarquee() {
-      if (animId) { cancelAnimationFrame(animId); animId = null; }
-      const cards = testimonialsGrid.querySelectorAll('.testimonial-card');
-      if (cards.length === 0) return;
+  function initMarquee(container, itemSelector, gap, speed) {
+    const key = container === testimonialsGrid ? 'testimonials' : 'clients';
+    const state = marqueeState[key] || {};
+    if (state.animId) cancelAnimationFrame(state.animId);
 
-      testimonialsGrid.style.overflow = 'hidden';
-      const track = document.createElement('div');
-      track.style.cssText = 'display:flex;gap:16px;width:max-content';
-      cards.forEach(c => {
-        const clone = c.cloneNode(true);
+    const items = container.querySelectorAll(itemSelector);
+    if (items.length === 0) return;
+
+    container.style.overflow = 'hidden';
+
+    const track = document.createElement('div');
+    track.style.cssText = `display:flex;gap:${gap}px;width:max-content;align-items:center`;
+
+    const addItems = (src) => {
+      src.forEach(el => {
+        const clone = el.cloneNode(true);
         clone.classList.add('visible');
         track.appendChild(clone);
       });
-      cards.forEach(c => {
-        const clone = c.cloneNode(true);
-        clone.classList.add('visible');
-        track.appendChild(clone);
-      });
-      testimonialsGrid.innerHTML = '';
-      testimonialsGrid.appendChild(track);
+    };
+    addItems(items);
+    addItems(items);
 
-      let pos = 0;
-      function tick() {
-        if (window.innerWidth <= 768) {
-          if (!isPaused) {
-            pos -= speed;
-            const cardWidth = track.children[0].offsetWidth + 16;
-            const total = cardWidth * cards.length;
-            if (pos <= -total) pos += total;
-            track.style.transform = `translateX(${pos}px)`;
-          }
-          animId = requestAnimationFrame(tick);
+    container.innerHTML = '';
+    container.appendChild(track);
+
+    let pos = 0;
+    const totalItems = items.length;
+
+    function tick() {
+      if (window.innerWidth <= 768) {
+        if (!state.paused) {
+          pos -= speed;
+          const itemWidth = track.children[0].offsetWidth + gap;
+          const total = itemWidth * totalItems;
+          if (pos <= -total) pos += total;
+          track.style.transform = `translateX(${pos}px)`;
         }
+        state.animId = requestAnimationFrame(tick);
       }
-
-      testimonialsGrid.addEventListener('mouseenter', () => { isPaused = true; });
-      testimonialsGrid.addEventListener('mouseleave', () => { isPaused = false; });
-      testimonialsGrid.addEventListener('touchstart', () => { isPaused = true; });
-      testimonialsGrid.addEventListener('touchend', () => { isPaused = false; });
-
-      tick();
     }
 
-    initMarquee();
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(initMarquee, 300);
-    });
+    const pause = () => { state.paused = true; };
+    const resume = () => { state.paused = false; };
+    container.addEventListener('mouseenter', pause);
+    container.addEventListener('mouseleave', resume);
+    container.addEventListener('touchstart', pause);
+    container.addEventListener('touchend', resume);
+
+    marqueeState[key] = { animId: null, paused: false };
+    state.animId = null;
+    state.paused = false;
+    tick();
   }
 
-  // ── Clients Auto-Scroll (mobile only) ──
+  if (testimonialsGrid) {
+    initMarquee(testimonialsGrid, '.testimonial-card', 16, 1.2);
+  }
+
   const clientsGrid = document.querySelector('.clients-grid');
   if (clientsGrid) {
-    let animId = null;
-    let isPaused = false;
-    const speed = 1;
-
-    function initClientsMarquee() {
-      if (animId) { cancelAnimationFrame(animId); animId = null; }
-      const logos = clientsGrid.querySelectorAll('.client-logo');
-      if (logos.length === 0) return;
-
-      clientsGrid.style.overflow = 'hidden';
-      const track = document.createElement('div');
-      track.style.cssText = 'display:flex;gap:20px;width:max-content;align-items:center';
-      logos.forEach(l => {
-        const clone = l.cloneNode(true);
-        clone.classList.add('visible');
-        track.appendChild(clone);
-      });
-      logos.forEach(l => {
-        const clone = l.cloneNode(true);
-        clone.classList.add('visible');
-        track.appendChild(clone);
-      });
-      clientsGrid.innerHTML = '';
-      clientsGrid.appendChild(track);
-
-      let pos = 0;
-      function tick() {
-        if (window.innerWidth <= 768) {
-          if (!isPaused) {
-            pos -= speed;
-            const itemWidth = track.children[0].offsetWidth + 20;
-            const total = itemWidth * logos.length;
-            if (pos <= -total) pos += total;
-            track.style.transform = `translateX(${pos}px)`;
-          }
-          animId = requestAnimationFrame(tick);
-        }
-      }
-
-      clientsGrid.addEventListener('mouseenter', () => { isPaused = true; });
-      clientsGrid.addEventListener('mouseleave', () => { isPaused = false; });
-      clientsGrid.addEventListener('touchstart', () => { isPaused = true; });
-      clientsGrid.addEventListener('touchend', () => { isPaused = false; });
-
-      tick();
-    }
-
-    initClientsMarquee();
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(initClientsMarquee, 300);
-    });
+    initMarquee(clientsGrid, '.client-logo', 20, 1);
   }
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (testimonialsGrid) initMarquee(testimonialsGrid, '.testimonial-card', 16, 1.2);
+      if (clientsGrid) initMarquee(clientsGrid, '.client-logo', 20, 1);
+    }, 300);
+  });
 
   const revealElements = document.querySelectorAll('.reveal');
 
