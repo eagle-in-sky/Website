@@ -1568,6 +1568,14 @@ body::before {
     order: -1;
   }
 
+  .service-block-text h3 {
+    font-size: clamp(22px, 3.5vw, 28px);
+  }
+
+  .service-illustration {
+    max-width: 320px;
+  }
+
   .process-content {
     grid-template-columns: 1fr;
     gap: 40px;
@@ -1593,6 +1601,15 @@ body::before {
   .modal-title {
     font-size: clamp(36px, 5vw, 56px);
   }
+
+  .modal-info {
+    max-width: 400px;
+  }
+
+  .client-logo {
+    width: 120px;
+    height: 120px;
+  }
 }
 
 /* ================================================================
@@ -1610,73 +1627,635 @@ body::before {
 
   .mobile-menu {
     display: block;
+    width: 100%;
+    right: -100%;
   }
 
-  .hero h1 {
-    font-size: clamp(32px, 8vw, 48px);
+  .mobile-menu.open {
+    right: 0;
   }
 
-  .hero-stats {
-    flex-direction: column;
-    gap: 8px;
+  .dot-nav {
+    display: flex;
+    flex-direction: row;
+    top: auto;
+    bottom: 90px;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 9999px;
+    z-index: 500;
   }
 
-  .hero-stats .divider {
+  .dot-nav a {
+    width: 8px;
+    height: 8px;
+  }
+
+  .dot-nav a.active {
+    width: 10px;
+    height: 10px;
+  }
+
+  .dot-nav a::before {
     display: none;
-  }
-
-  .service-block-inner {
-    padding: clamp(24px, 4vw, 48px);
-  }
-
-  .comparison-table {
-    grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .testimonials-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-info {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-bottom {
-    flex-direction: column;
-    gap: 20px;
-    text-align: center;
-  }
-
-  .phone-mockup {
-    width: 240px;
-  }
-}
-
-@media (max-width: 480px) {
-  .section-card {
-    padding: clamp(20px, 5vw, 32px);
   }
 
   .hero {
     padding-top: 110px;
+    padding-bottom: calc(var(--section-pad-y) * 0.7);
+  }
+
+  .hero h1 {
+    font-size: clamp(28px, 8vw, 42px);
+  }
+
+  .hero-stats {
+    flex-direction: row;
+    gap: 8px;
+    font-size: 11px;
+  }
+
+  .hero-stats .divider {
+    display: inline-flex;
+  }
+
+  .hero-description {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .hero-cta-group .btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .hero-blob-1 {
+    width: 200px;
+    height: 200px;
+    top: 40px;
+    left: -60px;
+  }
+
+  .hero-blob-2 {
+    width: 180px;
+    height: 180px;
+    top: 120px;
+    right: -50px;
+  }
+
+  .hero-blob-3 {
+    width: 140px;
+    height: 140px;
+    bottom: 20px;
+  }
+
+  .services-label {
+    margin-bottom: 32px;
+  }
+
+  .services-grid {
+    gap: 16px;
+  }
+
+  .service-item {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .service-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .service-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .service-item h4 {
+    font-size: 15px;
+  }
+
+  .service-item p {
+    font-size: 13px;
+  }
+
+  .service-block-inner {
+    padding: clamp(20px, 4vw, 32px);
+    gap: 24px;
+  }
+
+  .service-block-text h3 {
+    font-size: clamp(20px, 5vw, 26px);
+  }
+
+  .service-block-text p {
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .service-tag {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .service-illustration {
+    width: 100%;
+    max-width: 280px;
+    padding: 16px;
+  }
+
+  .service-visual-wrapper {
+    aspect-ratio: 16/12;
+  }
+
+  .process-header {
+    margin-bottom: 36px;
+  }
+
+  .process-content {
+    gap: 32px;
+  }
+
+  .process-steps {
+    gap: 28px;
+  }
+
+  .process-step {
+    gap: 14px;
+  }
+
+  .step-number {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .step-content h4 {
+    font-size: 15px;
+  }
+
+  .step-content p {
+    font-size: 14px;
+  }
+
+  .phone-mockup {
+    width: 220px;
+    padding: 12px;
+    border-radius: 24px;
+  }
+
+  .phone-screen {
+    padding: 16px 12px;
+  }
+
+  .phone-chart {
+    height: 90px;
+  }
+
+  .comparison-header {
+    margin-bottom: 32px;
+  }
+
+  .comparison-table {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .comparison-col-header {
+    font-size: 11px;
+    padding: 6px 16px;
+    margin-bottom: 20px;
+  }
+
+  .comparison-item {
+    padding: 10px 0;
+    gap: 10px;
+  }
+
+  .comparison-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .others-text,
+  .adyvance-text {
+    font-size: 14px;
+  }
+
+  .testimonials-header {
+    margin-bottom: 32px;
+  }
+
+  .testimonials-grid {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .testimonials-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonial-card {
+    flex: 0 0 300px;
+    padding: 24px;
+  }
+
+  .testimonial-text {
+    font-size: 14px;
+  }
+
+  .testimonial-stars {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .faq-header {
+    margin-bottom: 32px;
+  }
+
+  .faq-question {
+    padding: 18px 0;
+    font-size: 15px;
+  }
+
+  .faq-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .faq-answer-inner {
+    font-size: 14px;
+    padding-bottom: 18px;
+  }
+
+  .section-heading {
+    font-size: clamp(26px, 6vw, 34px);
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 5px 14px;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+
+  .btn-ghost {
+    padding: 12px 24px;
+    font-size: 12px;
+  }
+
+  .section-card {
+    padding: clamp(20px, 4vw, 28px);
+    border-radius: 18px;
+  }
+
+  .services-card .blob-deco {
+    width: 180px;
+    height: 180px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .modal-info {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer {
+    padding: 40px 0 0;
+  }
+
+  .footer-logo img {
+    height: 36px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .footer-copy {
+    font-size: 12px;
+  }
+
+  .footer-social-link {
+    width: 36px;
+    height: 36px;
+  }
+
+  .client-logo {
+    width: 100px;
+    height: 100px;
+    animation: none;
+  }
+
+  .clients-grid {
+    display: flex !important;
+    gap: 20px;
+    overflow: hidden;
+    max-width: none !important;
+  }
+
+  .services-cta {
+    margin-top: 32px;
+  }
+
+  .comparison-cta {
+    margin-top: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --container-pad: 16px;
+    --section-pad-y: 48px;
+    --card-pad: 18px;
+    --grid-gap: 16px;
   }
 
   .header-inner {
-    height: 64px;
+    height: 60px;
   }
 
   .header-logo img {
+    height: 30px;
+  }
+
+  .section-card {
+    padding: clamp(16px, 4vw, 24px);
+    border-radius: 16px;
+  }
+
+  .hero {
+    padding-top: 90px;
+    padding-bottom: 40px;
+  }
+
+  .hero h1 {
+    font-size: clamp(24px, 7vw, 34px);
+    margin-bottom: 16px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .hero-cta-group .btn {
+    padding: 11px 20px;
+    font-size: 12px;
+  }
+
+  .hero-blob-1 {
+    width: 140px;
+    height: 140px;
+    top: 30px;
+    left: -40px;
+  }
+
+  .hero-blob-2 {
+    width: 120px;
+    height: 120px;
+    top: 90px;
+    right: -30px;
+  }
+
+  .hero-blob-3 {
+    width: 100px;
+    height: 100px;
+    bottom: 10px;
+    left: 40%;
+  }
+
+  .mobile-menu {
+    padding: 80px 24px 24px;
+  }
+
+  .mobile-menu a {
+    font-size: 16px;
+    padding: 14px 0;
+  }
+
+  .services-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .service-item {
+    padding: 14px;
+  }
+
+  .service-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .service-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .service-block-inner {
+    gap: 20px;
+  }
+
+  .service-block-text .badge {
+    margin-bottom: 12px;
+  }
+
+  .service-tags {
+    gap: 6px;
+  }
+
+  .service-tag {
+    padding: 5px 12px;
+    font-size: 11px;
+  }
+
+  .service-illustration {
+    max-width: 240px;
+    padding: 12px;
+  }
+
+  .process-steps {
+    gap: 24px;
+  }
+
+  .step-number {
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  .phone-mockup {
+    width: 180px;
+    padding: 8px;
+    border-radius: 20px;
+  }
+
+  .phone-screen {
+    padding: 12px 10px;
+    border-radius: 14px;
+  }
+
+  .phone-header span {
+    font-size: 12px;
+  }
+
+  .phone-header-btn {
+    padding: 4px 10px;
+    font-size: 9px;
+  }
+
+  .phone-chart {
+    height: 70px;
+    gap: 6px;
+  }
+
+  .chart-tooltip {
+    font-size: 8px;
+    padding: 3px 8px;
+    top: -28px;
+  }
+
+  .comparison-item {
+    padding: 8px 0;
+  }
+
+  .others-text,
+  .adyvance-text {
+    font-size: 13px;
+  }
+
+  .testimonial-card {
+    flex: 0 0 260px;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .testimonial-text {
+    font-size: 13px;
+  }
+
+  .testimonial-avatar {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+  }
+
+  .testimonial-name {
+    font-size: 14px;
+  }
+
+  .testimonial-role {
+    font-size: 12px;
+  }
+
+  .faq-question {
+    padding: 14px 0;
+    font-size: 14px;
+  }
+
+  .faq-answer-inner {
+    font-size: 13px;
+    padding-bottom: 14px;
+  }
+
+  .modal-content {
+    padding: clamp(20px, 4vw, 28px);
+    border-radius: 16px;
+  }
+
+  .modal-close {
+    top: 12px;
+    right: 12px;
+    width: 34px;
     height: 34px;
+    font-size: 16px;
+  }
+
+  .modal-title {
+    font-size: clamp(28px, 8vw, 38px);
+  }
+
+  .modal-subtitle {
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 14px 0;
+    font-size: 13px;
+  }
+
+  .form-submit {
+    padding: 15px;
+    font-size: 13px;
+    margin-top: 20px;
+  }
+
+  .btn-ghost {
+    padding: 10px 20px;
+    font-size: 11px;
+  }
+
+  .client-logo {
+    width: 80px;
+    height: 80px;
+    animation: none;
+  }
+
+  .clients-grid {
+    overflow: hidden;
+  }
+
+  .footer-logo img {
+    height: 30px;
+  }
+
+  .floating-contact {
+    bottom: 16px;
+    right: 12px;
+    gap: 8px;
   }
 
   .float-btn {
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .float-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .dot-nav {
+    bottom: 80px;
   }
 }
 

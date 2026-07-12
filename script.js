@@ -214,7 +214,121 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ── Scroll Reveal Animation ──
+  // ── Testimonials Auto-Scroll (mobile only) ──
+  const testimonialsGrid = document.querySelector('.testimonials-grid');
+  if (testimonialsGrid) {
+    let animId = null;
+    let isPaused = false;
+    const speed = 1.2;
+
+    function initMarquee() {
+      if (animId) { cancelAnimationFrame(animId); animId = null; }
+      const cards = testimonialsGrid.querySelectorAll('.testimonial-card');
+      if (cards.length === 0) return;
+
+      testimonialsGrid.style.overflow = 'hidden';
+      const track = document.createElement('div');
+      track.style.cssText = 'display:flex;gap:16px;width:max-content';
+      cards.forEach(c => {
+        const clone = c.cloneNode(true);
+        clone.classList.add('visible');
+        track.appendChild(clone);
+      });
+      cards.forEach(c => {
+        const clone = c.cloneNode(true);
+        clone.classList.add('visible');
+        track.appendChild(clone);
+      });
+      testimonialsGrid.innerHTML = '';
+      testimonialsGrid.appendChild(track);
+
+      let pos = 0;
+      function tick() {
+        if (window.innerWidth <= 768) {
+          if (!isPaused) {
+            pos -= speed;
+            const cardWidth = track.children[0].offsetWidth + 16;
+            const total = cardWidth * cards.length;
+            if (pos <= -total) pos += total;
+            track.style.transform = `translateX(${pos}px)`;
+          }
+          animId = requestAnimationFrame(tick);
+        }
+      }
+
+      testimonialsGrid.addEventListener('mouseenter', () => { isPaused = true; });
+      testimonialsGrid.addEventListener('mouseleave', () => { isPaused = false; });
+      testimonialsGrid.addEventListener('touchstart', () => { isPaused = true; });
+      testimonialsGrid.addEventListener('touchend', () => { isPaused = false; });
+
+      tick();
+    }
+
+    initMarquee();
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initMarquee, 300);
+    });
+  }
+
+  // ── Clients Auto-Scroll (mobile only) ──
+  const clientsGrid = document.querySelector('.clients-grid');
+  if (clientsGrid) {
+    let animId = null;
+    let isPaused = false;
+    const speed = 1;
+
+    function initClientsMarquee() {
+      if (animId) { cancelAnimationFrame(animId); animId = null; }
+      const logos = clientsGrid.querySelectorAll('.client-logo');
+      if (logos.length === 0) return;
+
+      clientsGrid.style.overflow = 'hidden';
+      const track = document.createElement('div');
+      track.style.cssText = 'display:flex;gap:20px;width:max-content;align-items:center';
+      logos.forEach(l => {
+        const clone = l.cloneNode(true);
+        clone.classList.add('visible');
+        track.appendChild(clone);
+      });
+      logos.forEach(l => {
+        const clone = l.cloneNode(true);
+        clone.classList.add('visible');
+        track.appendChild(clone);
+      });
+      clientsGrid.innerHTML = '';
+      clientsGrid.appendChild(track);
+
+      let pos = 0;
+      function tick() {
+        if (window.innerWidth <= 768) {
+          if (!isPaused) {
+            pos -= speed;
+            const itemWidth = track.children[0].offsetWidth + 20;
+            const total = itemWidth * logos.length;
+            if (pos <= -total) pos += total;
+            track.style.transform = `translateX(${pos}px)`;
+          }
+          animId = requestAnimationFrame(tick);
+        }
+      }
+
+      clientsGrid.addEventListener('mouseenter', () => { isPaused = true; });
+      clientsGrid.addEventListener('mouseleave', () => { isPaused = false; });
+      clientsGrid.addEventListener('touchstart', () => { isPaused = true; });
+      clientsGrid.addEventListener('touchend', () => { isPaused = false; });
+
+      tick();
+    }
+
+    initClientsMarquee();
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(initClientsMarquee, 300);
+    });
+  }
+
   const revealElements = document.querySelectorAll('.reveal');
 
   if (revealElements.length > 0) {
