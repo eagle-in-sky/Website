@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const testimonialsGrid = document.querySelector('.testimonials-grid');
   let marqueeState = {};
 
-  function initMarquee(container, itemSelector, gap, speed) {
+  function initMarquee(container, itemSelector, gap, speed, mobileOnly = true) {
     const key = container === testimonialsGrid ? 'testimonials' : 'clients';
     const state = marqueeState[key] || {};
     if (state.animId) cancelAnimationFrame(state.animId);
@@ -227,6 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (items.length === 0) return;
 
     container.style.overflow = 'hidden';
+    container.style.display = 'block';
 
     const track = document.createElement('div');
     track.style.cssText = `display:flex;gap:${gap}px;width:max-content;align-items:center`;
@@ -248,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalItems = items.length;
 
     function tick() {
-      if (window.innerWidth <= 768) {
+      if (!mobileOnly || window.innerWidth <= 768) {
         if (!state.paused) {
           pos -= speed;
           const itemWidth = track.children[0].offsetWidth + gap;
@@ -274,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (testimonialsGrid) {
-    initMarquee(testimonialsGrid, '.testimonial-card', 16, 1.2);
+    initMarquee(testimonialsGrid, '.testimonial-card', 16, 1.2, false);
   }
 
   const clientsGrid = document.querySelector('.clients-grid');
@@ -286,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      if (testimonialsGrid) initMarquee(testimonialsGrid, '.testimonial-card', 16, 1.2);
+      if (testimonialsGrid) initMarquee(testimonialsGrid, '.testimonial-card', 16, 1.2, false);
       if (clientsGrid) initMarquee(clientsGrid, '.client-logo', 20, 1);
     }, 300);
   });
