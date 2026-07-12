@@ -26,6 +26,7 @@
   <div class="preloader" id="preloader">
     <div class="preloader-spinner"></div>
   </div>
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
 
   <!-- ═══ HEADER / NAV ═══ -->
   <header class="header" id="header">
@@ -46,7 +47,8 @@
         <a href="https://wa.me/9779851425150" target="_blank" rel="noopener" class="btn btn-primary">Chat Now</a>
       </div>
 
-      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-controls="mobile-menu"
+        aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
     </div>
@@ -54,7 +56,7 @@
 
   <!-- Mobile Menu -->
   <div class="mobile-overlay" id="mobile-overlay"></div>
-  <div class="mobile-menu" id="mobile-menu">
+  <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
     <a href="#services">Services</a>
     <a href="#clients">Clients</a>
     <a href="#why">Why Adyvance?</a>
