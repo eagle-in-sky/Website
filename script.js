@@ -5,12 +5,18 @@
 document.addEventListener('DOMContentLoaded', () => {
   // ── Preloader ──
   const preloader = document.querySelector('.preloader');
+  const finishLoading = () => {
+    if (preloader) preloader.classList.add('hidden');
+    document.body.classList.add('is-loaded');
+  };
   if (preloader) {
     window.addEventListener('load', () => {
-      setTimeout(() => preloader.classList.add('hidden'), 600);
+      setTimeout(finishLoading, 500);
     });
     // Fallback — hide after 3s max
-    setTimeout(() => preloader.classList.add('hidden'), 3000);
+    setTimeout(finishLoading, 3000);
+  } else {
+    finishLoading();
   }
 
   // ── Sticky Header ──
@@ -374,22 +380,202 @@ document.addEventListener('DOMContentLoaded', () => {
   if (revealElements.length > 0) {
     if (prefersReducedMotion()) {
       revealElements.forEach(el => el.classList.add('visible'));
-      return;
+    } else {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '0px 0px -80px 0px',
+        threshold: 0.1
+      });
+
+      revealElements.forEach(el => revealObserver.observe(el));
+    }
+  }
+
+  // ── Marquee Badges (scrolling word strips) ──
+  document.querySelectorAll('.badge[data-marquee]').forEach(badge => {
+    const word = badge.getAttribute('data-marquee');
+    if (!word) return;
+
+    badge.setAttribute('aria-label', word);
+    badge.textContent = '';
+
+    const track = document.createElement('span');
+    track.className = 'badge-track';
+    track.setAttribute('aria-hidden', 'true');
+
+    for (let i = 0; i < 2; i += 1) {
+      const seg = document.createElement('span');
+      seg.className = 'badge-seg';
+      seg.textContent = (word + ' • ').repeat(6);
+      track.appendChild(seg);
     }
 
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
-        }
+    badge.appendChild(track);
+  });
+
+  // ── Animated Counters ──
+  const counters = document.querySelectorAll('[data-count]');
+
+  if (counters.length > 0) {
+    const finalText = el => el.getAttribute('data-count') + (el.getAttribute('data-suffix') || '');
+
+    if (prefersReducedMotion()) {
+      counters.forEach(el => { el.textContent = finalText(el); });
+    } else {
+      const counterObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          counterObserver.unobserve(entry.target);
+
+          const el = entry.target;
+          const target = parseFloat(el.getAttribute('data-count'));
+          const suffix = el.getAttribute('data-suffix') || '';
+          const duration = 1500;
+          let startTime = null;
+
+          if (!isFinite(target)) {
+            el.textContent = finalText(el);
+            return;
+          }
+
+          const step = (now) => {
+            if (startTime === null) startTime = now;
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+            el.textContent = Math.round(target * eased) + suffix;
+            if (progress < 1) requestAnimationFrame(step);
+          };
+
+          requestAnimationFrame(step);
+        });
+      }, { threshold: 0.5 });
+
+      counters.forEach(el => {
+        el.textContent = '0' + (el.getAttribute('data-suffix') || '');
+        counterObserver.observe(el);
       });
-    }, {
-      root: null,
-      rootMargin: '0px 0px -80px 0px',
-      threshold: 0.1
+    }
+  }
+
+  // ── In-View Gate for Process Chart ──
+  const processVisual = document.querySelector('.process-visual');
+  if (processVisual) {
+    if (prefersReducedMotion()) {
+      processVisual.classList.add('in-view');
+    } else {
+      const processObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            processVisual.classList.add('in-view');
+            processObserver.disconnect();
+          }
+        });
+      }, { threshold: 0.35 });
+      processObserver.observe(processVisual);
+    }
+  }
+
+  // ── 3D Tilt + Scroll Parallax on Service Visuals ──
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const tiltTargets = Array.from(document.querySelectorAll('.service-visual-wrapper'));
+
+  if (tiltTargets.length > 0 && !prefersReducedMotion()) {
+    const tiltStates = new Map();
+    tiltTargets.forEach(el => tiltStates.set(el, {
+      rx: 0, ry: 0, targetRx: 0, targetRy: 0,
+      py: 0, targetPy: 0, active: false
+    }));
+
+    const tiltVisibility = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const state = tiltStates.get(entry.target);
+        if (state) state.active = entry.isIntersecting;
+      });
+    }, { rootMargin: '100px 0px' });
+
+    tiltTargets.forEach(el => {
+      tiltVisibility.observe(el);
+
+      if (finePointer.matches) {
+        el.addEventListener('mousemove', (e) => {
+          const state = tiltStates.get(el);
+          const rect = el.getBoundingClientRect();
+          state.targetRy = ((e.clientX - rect.left) / rect.width - 0.5) * 9;
+          state.targetRx = (0.5 - (e.clientY - rect.top) / rect.height) * 7;
+        });
+        el.addEventListener('mouseleave', () => {
+          const state = tiltStates.get(el);
+          state.targetRx = 0;
+          state.targetRy = 0;
+        });
+      }
     });
 
-    revealElements.forEach(el => revealObserver.observe(el));
+    const tiltFrame = () => {
+      const viewCenter = window.innerHeight / 2;
+      tiltStates.forEach((state, el) => {
+        if (!state.active) return;
+        const rect = el.getBoundingClientRect();
+        state.targetPy = ((rect.top + rect.height / 2) - viewCenter) * -0.055;
+        state.rx += (state.targetRx - state.rx) * 0.12;
+        state.ry += (state.targetRy - state.ry) * 0.12;
+        state.py += (state.targetPy - state.py) * 0.12;
+        el.style.transform =
+          `perspective(900px) translate3d(0, ${state.py.toFixed(2)}px, 0) ` +
+          `rotateX(${state.rx.toFixed(2)}deg) rotateY(${state.ry.toFixed(2)}deg)`;
+      });
+      requestAnimationFrame(tiltFrame);
+    };
+    requestAnimationFrame(tiltFrame);
+  }
+
+  // ── Hero Blob Mouse Parallax ──
+  const heroSection = document.querySelector('.hero');
+  const heroBlobs = Array.from(document.querySelectorAll('.hero-blob'));
+
+  if (heroSection && heroBlobs.length > 0 && finePointer.matches && !prefersReducedMotion()) {
+    let pointerX = 0;
+    let pointerY = 0;
+    const blobPositions = heroBlobs.map(() => ({ x: 0, y: 0 }));
+
+    heroSection.addEventListener('mousemove', (e) => {
+      pointerX = e.clientX / window.innerWidth - 0.5;
+      pointerY = e.clientY / window.innerHeight - 0.5;
+    });
+
+    const blobFrame = () => {
+      heroBlobs.forEach((blob, i) => {
+        const factor = parseFloat(blob.getAttribute('data-drift') || '20');
+        const pos = blobPositions[i];
+        pos.x += (pointerX * factor - pos.x) * 0.05;
+        pos.y += (pointerY * factor - pos.y) * 0.05;
+        blob.style.setProperty('--mx', pos.x.toFixed(2) + 'px');
+        blob.style.setProperty('--my', pos.y.toFixed(2) + 'px');
+      });
+      requestAnimationFrame(blobFrame);
+    };
+    requestAnimationFrame(blobFrame);
+  }
+
+  // ── Magnetic Buttons ──
+  if (finePointer.matches && !prefersReducedMotion()) {
+    document.querySelectorAll('.btn-primary, .btn-outline, .form-submit').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const dx = (e.clientX - (rect.left + rect.width / 2)) / rect.width;
+        const dy = (e.clientY - (rect.top + rect.height / 2)) / rect.height;
+        btn.style.transform = `translate(${(dx * 10).toFixed(1)}px, ${(dy * 8 - 2).toFixed(1)}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+    });
   }
 });
