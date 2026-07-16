@@ -92,28 +92,38 @@
       <div class="hero-blob hero-blob-2" data-drift="-34"></div>
       <div class="hero-blob hero-blob-3" data-drift="18"></div>
 
-      <div class="container hero-content">
-        <h1>
-          <span class="line-mask"><span class="line-inner">Grow Your Business</span></span>
-          <span class="line-mask"><span class="line-inner">With <span class="gradient-text">Smart
-                Strategies.</span></span></span>
-        </h1>
+      <div class="container hero-layout">
+        <div class="hero-content">
+          <h1>
+            <span class="line-mask"><span class="line-inner">Grow Your Business</span></span>
+            <span class="line-mask"><span class="line-inner">With <span class="gradient-text">Smart
+                  Strategies.</span></span></span>
+          </h1>
 
-        <div class="hero-stats hero-reveal hero-reveal-1">
-          <span>Expert Team</span>
-          <span class="divider"></span>
-          <span>10+ Clients</span>
-          <span class="divider"></span>
-          <span>Proven Results</span>
+          <div class="hero-stats hero-reveal hero-reveal-1">
+            <span>Expert Team</span>
+            <span class="divider"></span>
+            <span>10+ Clients</span>
+            <span class="divider"></span>
+            <span>Proven Results</span>
+          </div>
+
+          <p class="hero-description hero-reveal hero-reveal-2">
+            A dedicated team of specialists delivering remarkable growth for businesses across Nepal and beyond.
+          </p>
+
+          <div class="hero-cta-group hero-reveal hero-reveal-3">
+            <a href="#" class="btn btn-primary hero-primary-cta" data-modal="contact">Book a Strategy Call</a>
+            <a href="#services" class="btn btn-outline">Our Services</a>
+          </div>
         </div>
 
-        <p class="hero-description hero-reveal hero-reveal-2">
-          A dedicated team of specialists delivering remarkable growth for businesses across Nepal and beyond.
-        </p>
-
-        <div class="hero-cta-group hero-reveal hero-reveal-3">
-          <a href="#" class="btn btn-primary" data-modal="contact">Book a Strategy Call</a>
-          <a href="#services" class="btn btn-outline">Our Services</a>
+        <div class="hero-visual hero-reveal hero-reveal-2" aria-hidden="true">
+          <div class="hero-visual-aura"></div>
+          <div class="hero-visual-fallback">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="hero-3d" id="hero-3d"></div>
         </div>
 
         <a href="#services" class="hero-scroll hero-reveal hero-reveal-4" aria-label="Scroll down to services">
@@ -1038,6 +1048,8 @@
     </a>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="./hero-scene.js"></script>
   <script src="./script.js"></script>
 </body>
 

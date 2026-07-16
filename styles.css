@@ -476,11 +476,134 @@ body::before {
   padding-bottom: var(--section-pad-y);
   text-align: center;
   position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(88vh, 880px);
 }
 
 .hero-content {
   position: relative;
+  z-index: 3;
+}
+
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ── Hero visual column (3D scene) ── */
+.hero-visual {
+  position: relative;
   z-index: 2;
+  height: clamp(300px, 42vh, 440px);
+}
+
+.hero-visual-aura {
+  position: absolute;
+  inset: 4%;
+  background: radial-gradient(ellipse 62% 55% at 50% 58%, rgba(8,114,255,0.10) 0%, rgba(27,151,176,0.07) 45%, rgba(41,180,115,0) 78%);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+/* CSS-only fallback: gradient bars shown until WebGL takes over */
+.hero-visual-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(10px, 1.4vw, 18px);
+  padding-bottom: 16%;
+  pointer-events: none;
+  transition: opacity 0.8s var(--ease-out);
+}
+
+.hero-visual-fallback span {
+  width: clamp(30px, 4vw, 52px);
+  border-radius: 14px;
+  transform-origin: bottom;
+  animation: fallbackBreath 4.4s ease-in-out infinite;
+}
+
+.hero-visual-fallback span:nth-child(1) { height: 26%; background: linear-gradient(180deg, rgba(8,114,255,0.42), rgba(8,114,255,0.12)); }
+.hero-visual-fallback span:nth-child(2) { height: 38%; background: linear-gradient(180deg, rgba(18,134,212,0.42), rgba(18,134,212,0.12)); animation-delay: 0.4s; }
+.hero-visual-fallback span:nth-child(3) { height: 51%; background: linear-gradient(180deg, rgba(27,151,176,0.42), rgba(27,151,176,0.12)); animation-delay: 0.8s; }
+.hero-visual-fallback span:nth-child(4) { height: 65%; background: linear-gradient(180deg, rgba(31,159,159,0.42), rgba(31,159,159,0.12)); animation-delay: 1.2s; }
+.hero-visual-fallback span:nth-child(5) { height: 80%; background: linear-gradient(180deg, rgba(41,180,115,0.45), rgba(41,180,115,0.12)); animation-delay: 1.6s; }
+
+@keyframes fallbackBreath {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.05); }
+}
+
+.hero.three-ready .hero-visual-fallback {
+  opacity: 0;
+}
+
+.hero-3d {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.1s var(--ease-out);
+}
+
+.hero.three-ready .hero-3d {
+  opacity: 1;
+}
+
+.hero-3d canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-scroll {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
+/* Split hero on desktop: copy left, sculpture right */
+@media (min-width: 993px) {
+  .hero {
+    text-align: left;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1.04fr 0.96fr;
+    gap: 48px;
+  }
+
+  .hero-layout .hero-content h1 {
+    font-size: clamp(38px, 3.7vw, 58px);
+  }
+
+  .hero-visual {
+    height: clamp(460px, 58vh, 640px);
+  }
+
+  .hero-3d {
+    pointer-events: auto;
+  }
+
+  .hero-layout .hero-stats,
+  .hero-layout .hero-cta-group {
+    justify-content: flex-start;
+  }
+
+  .hero-layout .hero-description {
+    margin-left: 0;
+  }
+
+  .hero-scroll {
+    margin-top: 12px;
+  }
 }
 
 .hero h1 {
@@ -3270,6 +3393,10 @@ body.menu-open .floating-contact {
 }
 
 @media (max-width: 768px) {
+  .hero {
+    min-height: min(78vh, 720px);
+  }
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 22px 12px;
@@ -3510,6 +3637,10 @@ body.menu-open .floating-contact {
 
 /* --- Reduced motion: instantly settle everything new --- */
 @media (prefers-reduced-motion: reduce) {
+  .hero-3d {
+    transition: none;
+  }
+
   .js .hero h1 .line-inner,
   .js .hero-reveal {
     opacity: 1;
@@ -3532,7 +3663,8 @@ body.menu-open .floating-contact {
   }
 
   .badge-track,
-  .hero-scroll-dot {
+  .hero-scroll-dot,
+  .hero-visual-fallback span {
     animation: none;
   }
 
