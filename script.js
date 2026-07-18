@@ -46,13 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
   updateScrollProgress();
 
   const header = document.querySelector('.header');
+  const floatingContact = document.querySelector('.floating-contact');
   const handleScroll = () => {
     if (!header) return;
-    if (window.scrollY > 40) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
+    const isScrolled = window.scrollY > 40;
+    header.classList.toggle('scrolled', isScrolled);
+    if (floatingContact) floatingContact.classList.toggle('scrolled', isScrolled);
   };
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();

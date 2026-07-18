@@ -322,10 +322,10 @@ body::before {
 }
 
 .header.scrolled {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: var(--shadow-nav);
+  background: linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,255,255,0.5) 100%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(15,23,42,0.08), inset 0 1px 0 rgba(255,255,255,0.75);
 }
 
 .header-inner {
@@ -340,13 +340,26 @@ body::before {
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
 .header-logo img {
-  height: 42px;
+  height: 38px;
   width: auto;
+}
+
+.header-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: normal;
+  padding-bottom: 0.1em;
+  letter-spacing: 0.02em;
+  background: var(--adv-gradient-90);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 .nav-links {
@@ -2123,7 +2136,11 @@ body::before {
   }
 
   .header-logo img {
-    height: 30px;
+    height: 28px;
+  }
+
+  .header-logo-text {
+    font-size: 1.15rem;
   }
 
   .section-card {
@@ -2403,6 +2420,7 @@ body::before {
   align-items: center;
   justify-content: center;
   color: var(--color-white);
+  border: 1px solid transparent;
   box-shadow: 0 4px 16px rgba(0,0,0,0.15);
   transition: all 0.3s var(--ease);
   text-decoration: none;
@@ -2428,6 +2446,28 @@ body::before {
 
 .call-btn:hover {
   background-color: #005ce6;
+}
+
+/* Glassmorphism once the page is scrolled */
+.floating-contact.scrolled .float-btn {
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-color: rgba(255,255,255,0.7);
+  box-shadow: 0 8px 24px rgba(15,23,42,0.14), inset 0 1px 0 rgba(255,255,255,0.8);
+  animation: none;
+}
+
+.floating-contact.scrolled .wa-btn {
+  color: #1faf54;
+}
+
+.floating-contact.scrolled .call-btn {
+  color: var(--adv-blue);
+}
+
+.floating-contact.scrolled .float-btn:hover {
+  background: rgba(255,255,255,0.75);
 }
 
 /* Client Logo Styling & Animation */
@@ -2517,7 +2557,7 @@ body.menu-open {
 }
 
 .header.scrolled {
-  border-bottom: 1px solid rgba(8,114,255,0.06);
+  border-bottom: 1px solid rgba(15,23,42,0.06);
 }
 
 .header-logo img {
@@ -2858,7 +2898,11 @@ body.menu-open .floating-contact {
   }
 
   .header-logo img {
-    height: 34px;
+    height: 32px;
+  }
+
+  .header-logo-text {
+    font-size: 1.3rem;
   }
 
   .hamburger {
@@ -2912,13 +2956,14 @@ body.menu-open .floating-contact {
 
   .mobile-menu a {
     opacity: 0;
-    transform: translateX(18px);
-    transition: opacity 0.36s var(--ease-out), transform 0.36s var(--ease-out), color var(--duration) var(--ease);
+    transform: translateY(22px);
+    transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out), color var(--duration) var(--ease);
+    transition-delay: 0s;
   }
 
   .mobile-menu.open a {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 
   .mobile-menu a.btn {
@@ -2928,12 +2973,13 @@ body.menu-open .floating-contact {
     text-align: center;
   }
 
-  .mobile-menu a:nth-child(1) { transition-delay: 0.04s; }
-  .mobile-menu a:nth-child(2) { transition-delay: 0.08s; }
-  .mobile-menu a:nth-child(3) { transition-delay: 0.12s; }
-  .mobile-menu a:nth-child(4) { transition-delay: 0.16s; }
-  .mobile-menu a:nth-child(5) { transition-delay: 0.20s; }
-  .mobile-menu a:nth-child(6) { transition-delay: 0.24s; }
+  /* Stagger only on open — closing stays instant */
+  .mobile-menu.open a:nth-child(1) { transition-delay: 0.16s; }
+  .mobile-menu.open a:nth-child(2) { transition-delay: 0.25s; }
+  .mobile-menu.open a:nth-child(3) { transition-delay: 0.34s; }
+  .mobile-menu.open a:nth-child(4) { transition-delay: 0.43s; }
+  .mobile-menu.open a:nth-child(5) { transition-delay: 0.52s; }
+  .mobile-menu.open a:nth-child(6) { transition-delay: 0.61s; }
 
   .hero {
     padding-top: 92px;
@@ -3153,7 +3199,11 @@ body.menu-open .floating-contact {
   }
 
   .header-logo img {
-    height: 30px;
+    height: 28px;
+  }
+
+  .header-logo-text {
+    font-size: 1.15rem;
   }
 
   .hero {
@@ -3228,6 +3278,7 @@ body.menu-open .floating-contact {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 
   .reveal {
