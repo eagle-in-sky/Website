@@ -2723,15 +2723,36 @@ body.menu-open {
 
 .chart-bar {
   transform-origin: bottom;
-  animation: chartRise 1s var(--ease-out) both;
+  animation: chartRise 1s var(--ease-out) both, chartPulse 4.6s ease-in-out 1.6s infinite;
 }
 
-.chart-bar:nth-child(2) { animation-delay: 0.08s; }
-.chart-bar:nth-child(3) { animation-delay: 0.16s; }
-.chart-bar:nth-child(4) { animation-delay: 0.24s; }
-.chart-bar:nth-child(5) { animation-delay: 0.32s; }
-.chart-bar:nth-child(6) { animation-delay: 0.40s; }
-.chart-bar:nth-child(7) { animation-delay: 0.48s; }
+.chart-bar:nth-child(2) { animation-delay: 0.08s, 2.5s; }
+.chart-bar:nth-child(3) { animation-delay: 0.16s, 3.3s; }
+.chart-bar:nth-child(4) { animation-delay: 0.24s, 1.9s; }
+.chart-bar:nth-child(5) { animation-delay: 0.32s, 4.1s; }
+.chart-bar:nth-child(6) { animation-delay: 0.40s, 2.9s; }
+.chart-bar:nth-child(7) { animation-delay: 0.48s, 3.7s; }
+
+.phone-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+.phone-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent);
+  transform: translateX(-100%);
+  animation: barShimmer 3.2s ease-in-out infinite;
+}
+
+.phone-bar:nth-child(2)::after { animation-delay: 0.25s; }
+.phone-bar:nth-child(3)::after { animation-delay: 0.5s; }
+
+.phone-header-btn {
+  animation: publishPulse 4s ease-in-out 2s infinite;
+}
 
 .comparison-col {
   border-radius: 18px;
@@ -2868,6 +2889,38 @@ body.menu-open .floating-contact {
     transform: scaleY(1);
     opacity: 1;
   }
+}
+
+@keyframes chartPulse {
+  0%, 100% { transform: scaleY(1); }
+  35% { transform: scaleY(0.94); }
+  70% { transform: scaleY(1.05); }
+}
+
+@keyframes barShimmer {
+  0% { transform: translateX(-100%); }
+  60%, 100% { transform: translateX(100%); }
+}
+
+@keyframes tooltipPop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes tooltipBob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-4px); }
+}
+
+@keyframes publishPulse {
+  0%, 18%, 100% { transform: scale(1); }
+  8% { transform: scale(1.07); }
 }
 
 @keyframes contactPulse {
@@ -3460,6 +3513,13 @@ body.menu-open .floating-contact {
   .hero-scroll {
     display: none;
   }
+
+  /* Keyword strips sit centered above their headings in every section */
+  .badge[data-marquee] {
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* --- Directional child reveals for service blocks --- */
@@ -3501,10 +3561,15 @@ body.menu-open .floating-contact {
 }
 
 .js .process-visual.in-view .chart-bar {
-  animation-name: chartRise;
-  animation-duration: 1s;
-  animation-timing-function: var(--ease-out);
-  animation-fill-mode: both;
+  animation-name: chartRise, chartPulse;
+}
+
+.js .process-visual .chart-tooltip {
+  opacity: 0;
+}
+
+.js .process-visual.in-view .chart-tooltip {
+  animation: tooltipPop 0.5s var(--ease-out) 1.35s both, tooltipBob 3.4s ease-in-out 1.85s infinite;
 }
 
 /* --- Tilt targets --- */
@@ -3713,9 +3778,17 @@ body.menu-open .floating-contact {
     opacity: 1;
   }
 
+  .js .process-visual .chart-tooltip {
+    animation: none;
+    opacity: 1;
+  }
+
   .badge-track,
   .hero-scroll-dot,
-  .hero-visual-fallback span {
+  .hero-visual-fallback span,
+  .chart-bar,
+  .phone-bar::after,
+  .phone-header-btn {
     animation: none;
   }
 

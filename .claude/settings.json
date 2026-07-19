@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Windows/TEMP/claude/d--Adyvance-Website/d3e69644-93f2-46cd-883d-38aacf1694e6/scratchpad/**)",
+      "Bash(node menu-shots.js)"
+    ]
+  }
+}
