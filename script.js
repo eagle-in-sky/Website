@@ -409,13 +409,19 @@ document.addEventListener('DOMContentLoaded', () => {
     track.className = 'badge-track';
     track.setAttribute('aria-hidden', 'true');
 
+    // Each half of the track must be wider than the badge for a seamless
+    // -50% loop; short phrases repeat, long strips fit in one pass.
+    const phrase = word + ' • ';
+    const reps = Math.max(1, Math.ceil(36 / phrase.length));
+
     for (let i = 0; i < 2; i += 1) {
       const seg = document.createElement('span');
       seg.className = 'badge-seg';
-      seg.textContent = (word + ' • ').repeat(6);
+      seg.textContent = phrase.repeat(reps);
       track.appendChild(seg);
     }
 
+    track.style.animationDuration = (phrase.length * reps * 0.45).toFixed(1) + 's';
     badge.appendChild(track);
   });
 
